@@ -5,7 +5,7 @@ import 'package:web_admin/environment.dart';
 
 class AppPreferencesProvider extends ChangeNotifier {
   var _locale = Locale(env.defaultAppLanguageCode);
-  var _themeMode = ThemeMode.system;
+  var _themeMode = ThemeMode.dark;
 
   Locale get locale => _locale;
 
@@ -36,7 +36,7 @@ class AppPreferencesProvider extends ChangeNotifier {
 
     _themeMode = ThemeMode.values.byName(
         sharedPref.getString(StorageKeys.appThemeMode) ??
-            ThemeMode.system.name);
+            ThemeMode.dark.name);
 
     notifyListeners();
   }

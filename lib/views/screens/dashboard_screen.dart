@@ -161,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: const EdgeInsets.all(kDefaultPadding),
                       child: SizedBox(
                         height: 40.0,
-                        width: 120.0,
+                        width: 125.0,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: themeData.extension<AppButtonTheme>()!.infoElevated,

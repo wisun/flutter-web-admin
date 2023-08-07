@@ -13,7 +13,7 @@ class Environment {
 
   static void init({
     required String apiBaseUrl,
-    String defaultAppLanguageCode = 'en',
+    String defaultAppLanguageCode = 'zh_Hans',
   }) {
     _env = Environment._init(
       apiBaseUrl: apiBaseUrl,

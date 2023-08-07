@@ -104,9 +104,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "ipErrorText": MessageLookupByLibrary.simpleMessage("此字段需要有效的IP。"),
         "language": MessageLookupByLibrary.simpleMessage("语言"),
         "lightTheme": MessageLookupByLibrary.simpleMessage("亮色主题"),
-        "login": MessageLookupByLibrary.simpleMessage("登入"),
-        "loginNow": MessageLookupByLibrary.simpleMessage("马上登入！"),
-        "logout": MessageLookupByLibrary.simpleMessage("登出"),
+        "login": MessageLookupByLibrary.simpleMessage("登录"),
+        "loginNow": MessageLookupByLibrary.simpleMessage("马上登录！"),
+        "logout": MessageLookupByLibrary.simpleMessage("退出"),
         "loremIpsum":
             MessageLookupByLibrary.simpleMessage("这时候风雨也停止进行曲的合奏，四方云集，由何处开始"),
         "matchErrorText": MessageLookupByLibrary.simpleMessage("此字段与格式不匹配。"),

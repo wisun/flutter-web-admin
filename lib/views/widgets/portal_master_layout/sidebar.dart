@@ -7,6 +7,8 @@ import 'package:web_admin/master_layout_config.dart';
 import 'package:web_admin/providers/user_data_provider.dart';
 import 'package:web_admin/theme/theme_extensions/app_sidebar_theme.dart';
 
+import '../../../providers/app_preferences_provider.dart';
+
 class SidebarMenuConfig {
   final String uri;
   final IconData icon;
@@ -85,7 +87,10 @@ class _SidebarState extends State<Sidebar> {
                     Scaffold.of(context).closeDrawer();
                   }
                 },
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.white,
+                ),
                 color: sidebarTheme.foregroundColor,
                 tooltip: lang.closeNavigationMenu,
               ),
@@ -95,7 +100,8 @@ class _SidebarState extends State<Sidebar> {
             child: Theme(
               data: themeData.copyWith(
                 scrollbarTheme: themeData.scrollbarTheme.copyWith(
-                  thumbColor: MaterialStateProperty.all(sidebarTheme.foregroundColor.withOpacity(0.2)),
+                  thumbColor: MaterialStateProperty.all(
+                      sidebarTheme.foregroundColor.withOpacity(0.2)),
                 ),
               ),
               child: Scrollbar(
@@ -186,39 +192,53 @@ class _SidebarState extends State<Sidebar> {
     bool isSelected,
   ) {
     final sidebarTheme = Theme.of(context).extension<AppSidebarTheme>()!;
-    final textColor = (isSelected ? sidebarTheme.menuSelectedFontColor : sidebarTheme.foregroundColor);
+    final textColor = (isSelected
+        ? sidebarTheme.menuSelectedFontColor
+        : sidebarTheme.foregroundColor);
 
     return Padding(
       padding: padding,
       child: Card(
         color: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sidebarTheme.menuBorderRadius)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(sidebarTheme.menuBorderRadius)),
         elevation: 0.0,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
         child: ListTile(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: (sidebarTheme.menuFontSize + 4.0),
-                color: textColor,
-              ),
-              const SizedBox(width: kDefaultPadding * 0.5),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: sidebarTheme.menuFontSize,
+          title:
+              Consumer<AppPreferencesProvider>(builder: (context, pre, child) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: (sidebarTheme.menuFontSize + 4.0),
                   color: textColor,
                 ),
-              ),
-            ],
-          ),
+                pre.isNarrowMenu
+                    ? Container()
+                    : Row(
+                        children: [
+                          const SizedBox(width: kDefaultPadding * 0.5),
+                          Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: sidebarTheme.menuFontSize,
+                              color: textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+              ],
+            );
+          }),
           onTap: () => GoRouter.of(context).go(uri),
           selected: isSelected,
           selectedTileColor: sidebarTheme.menuSelectedBackgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sidebarTheme.menuBorderRadius)),
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(sidebarTheme.menuBorderRadius)),
           textColor: textColor,
           hoverColor: sidebarTheme.menuHoverColor,
         ),
@@ -237,14 +257,18 @@ class _SidebarState extends State<Sidebar> {
   ) {
     final themeData = Theme.of(context);
     final sidebarTheme = Theme.of(context).extension<AppSidebarTheme>()!;
-    final hasSelectedChild = children.any((e) => currentLocation.startsWith(e.uri));
-    final parentTextColor = (hasSelectedChild ? sidebarTheme.menuSelectedFontColor : sidebarTheme.foregroundColor);
+    final hasSelectedChild =
+        children.any((e) => currentLocation.startsWith(e.uri));
+    final parentTextColor = (hasSelectedChild
+        ? sidebarTheme.menuSelectedFontColor
+        : sidebarTheme.foregroundColor);
 
     return Padding(
       padding: padding,
       child: Card(
         color: Colors.transparent,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(sidebarTheme.menuBorderRadius)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(sidebarTheme.menuBorderRadius)),
         elevation: 0.0,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
@@ -259,28 +283,39 @@ class _SidebarState extends State<Sidebar> {
             iconColor: parentTextColor,
             collapsedIconColor: parentTextColor,
             backgroundColor: sidebarTheme.menuExpandedBackgroundColor,
-            collapsedBackgroundColor: (hasSelectedChild ? sidebarTheme.menuExpandedBackgroundColor : Colors.transparent),
+            collapsedBackgroundColor: (hasSelectedChild
+                ? sidebarTheme.menuExpandedBackgroundColor
+                : Colors.transparent),
             initiallyExpanded: hasSelectedChild,
             childrenPadding: EdgeInsets.only(
               top: sidebarTheme.menuExpandedChildTopPadding,
               bottom: sidebarTheme.menuExpandedChildBottomPadding,
             ),
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  size: (sidebarTheme.menuFontSize + 4.0),
-                ),
-                const SizedBox(width: kDefaultPadding * 0.5),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: sidebarTheme.menuFontSize,
+            title: Consumer<AppPreferencesProvider>(
+                builder: (context, pre, child) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    size: (sidebarTheme.menuFontSize + 4.0),
                   ),
-                ),
-              ],
-            ),
+                  pre.isNarrowMenu
+                      ? Container()
+                      : Row(
+                          children: [
+                            const SizedBox(width: kDefaultPadding * 0.5),
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: sidebarTheme.menuFontSize,
+                              ),
+                            ),
+                          ],
+                        ),
+                ],
+              );
+            }),
             children: children.map<Widget>((childMenu) {
               return _sidebarMenu(
                 context,
@@ -321,41 +356,69 @@ class SidebarHeader extends StatelessWidget {
 
     return Column(
       children: [
-        Row(
-          children: [
-            Selector<UserDataProvider, String>(
-              selector: (context, provider) => provider.userProfileImageUrl,
-              builder: (context, value, child) {
-                return CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(value),
-                  radius: 20.0,
-                );
-              },
-            ),
-            const SizedBox(width: kDefaultPadding * 0.5),
-            Selector<UserDataProvider, String>(
-              selector: (context, provider) => provider.username,
-              builder: (context, value, child) {
-                return Text(
-                  '${lang.hi}, $value',
-                  style: TextStyle(
-                    fontSize: sidebarTheme.headerUsernameFontSize,
-                    color: sidebarTheme.foregroundColor,
+        Consumer<AppPreferencesProvider>(builder: (context, pre, child) {
+          return Row(
+            children: [
+              Selector<UserDataProvider, String>(
+                selector: (context, provider) => provider.userProfileImageUrl,
+                builder: (context, value, child) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: NetworkImage(value),
+                    radius: 20.0,
+                  );
+                },
+              ),
+              const SizedBox(width: kDefaultPadding * 0.5),
+              Selector<UserDataProvider, String>(
+                selector: (context, provider) => provider.username,
+                builder: (context, value, child) {
+                  return Text(
+                    pre.isNarrowMenu ? '' : '${lang.hi}, $value',
+                    style: TextStyle(
+                      fontSize: sidebarTheme.headerUsernameFontSize,
+                      color: sidebarTheme.foregroundColor,
+                    ),
+                  );
+                },
+              ),
+              Expanded(child: Container()),
+              Visibility(
+                visible: MediaQuery.of(context).size.width > kScreenWidthLg,
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<AppPreferencesProvider>().isNarrowMenu =
+                        !pre.isNarrowMenu;
+                  },
+                  child: Container(
+                    child: pre.isNarrowMenu
+                        ? Icon(
+                            Icons.arrow_right,
+                            color: sidebarTheme.foregroundColor,
+                          )
+                        : Icon(
+                            Icons.arrow_left,
+                            color: sidebarTheme.foregroundColor,
+                          ),
                   ),
-                );
-              },
-            ),
-          ],
-        ),
+                ),
+              )
+            ],
+          );
+        }),
         const SizedBox(height: kDefaultPadding * 0.5),
         Align(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.centerLeft,
           child: IntrinsicHeight(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _textButton(themeData, sidebarTheme, Icons.manage_accounts_rounded, lang.account, onAccountButtonPressed),
+                _textButton(
+                    themeData,
+                    sidebarTheme,
+                    Icons.manage_accounts_rounded,
+                    lang.account,
+                    onAccountButtonPressed),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: VerticalDivider(
@@ -366,7 +429,8 @@ class SidebarHeader extends StatelessWidget {
                     endIndent: kTextPadding,
                   ),
                 ),
-                _textButton(themeData, sidebarTheme, Icons.login_rounded, lang.logout, onLogoutButtonPressed),
+                _textButton(themeData, sidebarTheme, Icons.login_rounded,
+                    lang.logout, onLogoutButtonPressed),
               ],
             ),
           ),
@@ -375,27 +439,41 @@ class SidebarHeader extends StatelessWidget {
     );
   }
 
-  Widget _textButton(ThemeData themeData, AppSidebarTheme sidebarTheme, IconData icon, String text, void Function() onPressed) {
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        foregroundColor: sidebarTheme.foregroundColor,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: (sidebarTheme.headerUsernameFontSize + 4.0),
-          ),
-          const SizedBox(width: kDefaultPadding * 0.5),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: sidebarTheme.headerUsernameFontSize,
-            ),
-          ),
-        ],
+  Widget _textButton(ThemeData themeData, AppSidebarTheme sidebarTheme,
+      IconData icon, String text, void Function() onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+        child: Container(
+          child:
+              Consumer<AppPreferencesProvider>(builder: (context, pre, child) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  size: (sidebarTheme.headerUsernameFontSize + 4.0),
+                  color: sidebarTheme.foregroundColor,
+                ),
+                pre.isNarrowMenu
+                    ? Container()
+                    : Row(
+                        children: [
+                          const SizedBox(width: kDefaultPadding * 0.5),
+                          Text(
+                            text,
+                            style: TextStyle(
+                              color: sidebarTheme.foregroundColor,
+                              fontSize: sidebarTheme.headerUsernameFontSize,
+                            ),
+                          ),
+                        ],
+                      ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

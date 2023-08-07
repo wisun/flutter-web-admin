@@ -48,7 +48,9 @@ class PortalMasterLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQueryData = MediaQuery.of(context);
     final themeData = Theme.of(context);
-    final drawer = (mediaQueryData.size.width <= kScreenWidthLg ? _sidebar(context) : null);
+    final drawer = (mediaQueryData.size.width <= kScreenWidthLg
+        ? _sidebar(context)
+        : null);
 
     return Scaffold(
       appBar: AppBar(
@@ -87,15 +89,21 @@ class PortalMasterLayout extends StatelessWidget {
     if (MediaQuery.of(context).size.width <= kScreenWidthLg) {
       return body;
     } else {
-      return Row(
-        children: [
-          SizedBox(
-            width: Theme.of(context).extension<AppSidebarTheme>()!.sidebarWidth,
-            child: _sidebar(context),
-          ),
-          Expanded(child: body),
-        ],
-      );
+      return Consumer<AppPreferencesProvider>(builder: (context, pre, child) {
+        return Row(
+          children: [
+            SizedBox(
+              width: pre.isNarrowMenu
+                  ? 128
+                  : Theme.of(context)
+                      .extension<AppSidebarTheme>()!
+                      .sidebarWidth,
+              child: _sidebar(context),
+            ),
+            Expanded(child: body),
+          ],
+        );
+      });
     }
   }
 
@@ -114,7 +122,8 @@ class PortalMasterLayout extends StatelessWidget {
   Widget _toggleThemeButton(BuildContext context) {
     final lang = Lang.of(context);
     final themeData = Theme.of(context);
-    final isFullWidthButton = (MediaQuery.of(context).size.width > kScreenWidthMd);
+    final isFullWidthButton =
+        (MediaQuery.of(context).size.width > kScreenWidthMd);
 
     return SizedBox(
       width: (isFullWidthButton ? null : 48.0),
@@ -122,13 +131,16 @@ class PortalMasterLayout extends StatelessWidget {
         onPressed: () async {
           final provider = context.read<AppPreferencesProvider>();
           final currentThemeMode = provider.themeMode;
-          final themeMode = (currentThemeMode != ThemeMode.dark ? ThemeMode.dark : ThemeMode.light);
+          final themeMode = (currentThemeMode != ThemeMode.dark
+              ? ThemeMode.dark
+              : ThemeMode.light);
 
           provider.setThemeModeAsync(themeMode: themeMode);
         },
         style: TextButton.styleFrom(
           foregroundColor: themeData.colorScheme.onPrimary,
-          disabledForegroundColor: themeData.extension<AppColorScheme>()!.primary.withOpacity(0.38),
+          disabledForegroundColor:
+              themeData.extension<AppColorScheme>()!.primary.withOpacity(0.38),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         ),
         child: Selector<AppPreferencesProvider, ThemeMode>(
@@ -175,7 +187,9 @@ class PortalMasterLayout extends StatelessWidget {
             onTap: () async {
               final provider = context.read<AppPreferencesProvider>();
 
-              await provider.setLocaleAsync(locale: Locale.fromSubtags(languageCode: e.languageCode, scriptCode: e.scriptCode));
+              await provider.setLocaleAsync(
+                  locale: Locale.fromSubtags(
+                      languageCode: e.languageCode, scriptCode: e.scriptCode));
             },
             child: Text(e.name),
           );

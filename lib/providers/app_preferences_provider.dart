@@ -10,21 +10,33 @@ class AppPreferencesProvider extends ChangeNotifier {
   Locale get locale => _locale;
 
   ThemeMode get themeMode => _themeMode;
+  bool _isNarrowMenu = false;
+
+  bool get isNarrowMenu => _isNarrowMenu;
+
+  set isNarrowMenu(bool value) {
+    _isNarrowMenu = value;
+    notifyListeners();
+  }
 
   Future<void> loadAsync() async {
     final sharedPref = await SharedPreferences.getInstance();
 
-    final langCode = (sharedPref.getString(StorageKeys.appLanguageCode) ?? env.defaultAppLanguageCode);
+    final langCode = (sharedPref.getString(StorageKeys.appLanguageCode) ??
+        env.defaultAppLanguageCode);
 
     if (langCode.contains('_')) {
       final values = langCode.split('_');
 
-      _locale = Locale.fromSubtags(languageCode: values[0], scriptCode: values[1]);
+      _locale =
+          Locale.fromSubtags(languageCode: values[0], scriptCode: values[1]);
     } else {
       _locale = Locale(langCode);
     }
 
-    _themeMode = ThemeMode.values.byName(sharedPref.getString(StorageKeys.appThemeMode) ?? ThemeMode.system.name);
+    _themeMode = ThemeMode.values.byName(
+        sharedPref.getString(StorageKeys.appThemeMode) ??
+            ThemeMode.system.name);
 
     notifyListeners();
   }

@@ -1,11 +1,11 @@
-# Flutter Web Admin Portal
+# Flutter Web Admin Portal     [中文说明](./readme-zh.md)
 
 Responsive web with light/dark mode and multi language supported. The objective of this project is to develop an admin portal website with Flutter v3 (SDK version 3.10.1).
 
 
 https://user-images.githubusercontent.com/12734486/174944388-5b80f3c6-187a-4e98-89e3-34180ac61379.mp4
 
-
+[Screen Gif Demo](./flutter-web-admin.gif)
 ## Live Preview
 [Website Demo](https://kcflutterwebadmin.surge.sh)
 
